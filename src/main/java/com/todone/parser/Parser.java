@@ -29,24 +29,27 @@ public class Parser {
                 task.setProjects(parseProjects(textTask));
                 task.setTags(parseTags(textTask));
                 task.setDueDate(parseDueDate(textTask));
-                //task.setAttachments(parseAttachments(textTask));
+                task.setAttachments(parseAttachments(textTask));
+                task.setDescription(parseDescription(textTask));
             }
         }
         return null;
     }
 
     public String parseDoneDate(String task){
-        String regEx = "done:\\d{4}-\\d{2}-\\d{2}";
+        String regEx = "\s?done:\\d{4}-\\d{2}-\\d{2}";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
-        String date = matcher.group().substring(5);
-        if (isValidDate(date)){
-            return date;
+        if (matcher.find()){
+            String date = matcher.group().substring(5);
+            if (isValidDate(date)){
+                return date;
+            }
         }
         return "";
     }
     public String parsePriority(String task){
-        String regEx = "\\([A-Z]\\)";
+        String regEx = " ?\\([A-Z]\\)";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
         if (matcher.find()){
@@ -92,9 +95,26 @@ public class Parser {
         }
         return "";
     }
-//    public List<String> parseAttachments(String task){
-//
-//    }
+    public List<String> parseAttachments(String task){
+        String regEx = "\\[(.*?)\\]";
+        Pattern pattern = Pattern.compile(regEx);
+        Matcher matcher = pattern.matcher(task);
+        List<String> attachments = new ArrayList<>();
+        while (matcher.find()){
+            String match = matcher.group().trim();
+            attachments.add(match);
+        }
+        return attachments;
+    }
+    public String parseDescription(String task){
+        String regEx = "\\{(.*?)\\}";
+        Pattern pattern = Pattern.compile(regEx);
+        Matcher matcher = pattern.matcher(task);
+        if(matcher.find()){
+            return matcher.group();
+        }
+        return "";
+    }
 
     public boolean isValidDate(String dateString){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
