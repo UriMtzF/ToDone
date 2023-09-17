@@ -35,9 +35,6 @@ public class Parser {
         return null;
     }
 
-    public String parseStatus(String task){
-        return String.valueOf(task.charAt(0));
-    }
     public String parseDoneDate(String task){
         String regEx = "done:\\d{4}-\\d{2}-\\d{2}";
         Pattern pattern = Pattern.compile(regEx);
