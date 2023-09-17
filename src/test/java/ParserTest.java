@@ -112,4 +112,30 @@ public class ParserTest {
         // If no project is found it should return an empty List
         assertEquals(noTagFound,this.parser.parseTags("This doesn't have tags"));
     }
+    @Test
+    public void testAttachmentsParser(){
+        List<String> noAttachmentFound = new ArrayList<>();
+        List<String> oneAttachmentFound = new ArrayList<>();
+        List<String> multipleAttachmentsFound = new ArrayList<>();
+        oneAttachmentFound.add("attachment.pdf");
+        multipleAttachmentsFound.add("attachment1.pdf");
+        multipleAttachmentsFound.add("attachment2.pdf");
+        // Attachments must be surrounded by "[]" and have a space right before and after
+        // Starting and finishing spaces must be deleted
+        assertEquals(oneAttachmentFound,this.parser.parseAttachments("This has an [attachment.pdf]"));
+        assertEquals(oneAttachmentFound,this.parser.parseAttachments("This has an [   attachment.pdf          ]"));
+        assertEquals(noAttachmentFound,this.parser.parseAttachments("This shouldn't be an[attachment.pdf]"));
+        // Multiple attachments can be present
+        assertEquals(multipleAttachmentsFound,this.parser.parseAttachments("This has an [attachment1.pdf] and [attachment2.pdf]"));
+        assertEquals(multipleAttachmentsFound,this.parser.parseAttachments("This has an [attachment1.pdf] and [attachment2.pdf] but not an[attachment3.pdf]"));
+    }
+    @Test
+    public void testDescriptionParser(){
+        // Description file must be surrounded by "{}" and have a space right before and after
+        // Starting and finishing spaces must be deleted
+        assertEquals("description.txt",this.parser.parseDescription("This has a {description.txt}"));
+        assertEquals("",this.parser.parseDescription("This shouldn't be a{description.txt}"));
+        // Only the first description is taken into account
+        assertEquals("description1.txt",this.parser.parseDescription("This has a {description1.txt} and another {description2.txt}"));
+    }
 }
