@@ -1,7 +1,5 @@
 package com.todone.parser;
 
-import com.todone.tasks.Task;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -161,7 +159,6 @@ public class CreateFromText {
     private boolean isValidDate(String dateString){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
-
         try {
             dateFormat.parse(dateString);
             return true;
