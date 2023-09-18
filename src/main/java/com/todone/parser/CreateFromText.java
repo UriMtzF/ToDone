@@ -12,13 +12,6 @@ import java.util.regex.Pattern;
 public class CreateFromText {
     private List<Task> tasks = new ArrayList<>();
 
-    public CreateFromText() {
-    }
-
-    public CreateFromText(StringBuilder tasks) {
-        setTasks(tasks);
-    }
-
     public void setTasks(StringBuilder tasksFileContent){
         String stringTasksFileContent = tasksFileContent.toString();
 
@@ -39,6 +32,7 @@ public class CreateFromText {
                 task.setDueDate(parseDueDate(textTask));
                 task.setAttachments(parseAttachments(textTask));
                 task.setDescription(parseDescription(textTask));
+                task.setTitle(parseTitle(textTask,task));
                 this.tasks.add(task);
             }
         }
@@ -120,7 +114,7 @@ public class CreateFromText {
         return "";
     }
     private List<String> parseAttachments(String task){
-        String regEx = " \\[(.*?)\\]";
+        String regEx = " \\[(.*?)]";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
         List<String> attachments = new ArrayList<>();
@@ -141,6 +135,27 @@ public class CreateFromText {
             return match;
         }
         return "";
+    }
+    private String parseTitle(String taskText, Task task){
+        taskText = taskText.replaceAll(taskText.substring(0,2),"");
+        taskText = taskText.replaceAll("done:"+task.getDoneDate(),"");
+        taskText = taskText.replaceAll("\\([A-Z]\\)","");
+        taskText = taskText.replaceAll("created:"+task.getCreationDate(),"");
+        taskText = taskText.replaceAll("due:"+task.getDueDate(),"");
+        taskText = taskText.replaceAll("\\{"+task.getDescription()+"}","");
+        for (String attachment : task.getAttachments()) {
+            taskText = taskText.replaceAll("\\["+attachment+"]","");
+        }
+        for (String project : task.getProjects()) {
+            String regEx = "\\+" + project + ".*";
+            taskText = taskText.replaceAll(regEx,"");
+        }
+        for (String tag : task.getTags()) {
+            String regEx = "@" + tag + ".*";
+            taskText = taskText.replaceAll(regEx,"");
+        }
+        taskText = taskText.replaceAll("\\s+"," ");
+        return taskText.trim();
     }
 
     private boolean isValidDate(String dateString){
