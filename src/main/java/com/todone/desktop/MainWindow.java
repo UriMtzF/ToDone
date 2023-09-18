@@ -15,6 +15,7 @@ public class MainWindow extends JFrame {
         this.setIconImage(icon.getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(420, 420);
+        this.setLocationRelativeTo(null);
 
         mbMenuBar = new MenuBar();
         pToolBar = new ToolBar();

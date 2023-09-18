@@ -44,6 +44,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
         if (actionEvent.getSource().equals(miDocs)){
             NativeOperations.openOnDefaultBrowser("https://github.com/UriMtzF/ToDone/wiki");
         }
+        if (actionEvent.getSource().equals(miAbout)){
+            new AboutWindow(this);
+        }
         if (actionEvent.getSource().equals(miExit)) {
             System.exit(0);
         }
