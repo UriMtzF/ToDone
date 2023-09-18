@@ -8,6 +8,7 @@ public class MainWindow extends JFrame {
     private ToolBar pToolBar;
 
     public MainWindow() throws HeadlessException {
+        //TODO: Set multilanguage
         ImageIcon icon = new ImageIcon("resources/icon.png");
         this.setTitle("ToDone");
         this.setLayout(new BorderLayout(0,10));

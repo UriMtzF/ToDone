@@ -9,7 +9,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
     JMenuItem miNew, miSave, miExit, miAbout, miDocs;
 
     public MenuBar() {
-        //TODO: Set multilanguage
         mFile = new JMenu("File");
         mHelp = new JMenu("Help");
 
