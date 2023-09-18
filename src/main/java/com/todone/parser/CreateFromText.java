@@ -5,14 +5,21 @@ import com.todone.tasks.Task;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Parser {
-    private List<Task> tasks;
-    public List<String> getTasks(StringBuilder tasksFileContent){
+public class CreateFromText {
+    private List<Task> tasks = new ArrayList<>();
+
+    public CreateFromText() {
+    }
+
+    public CreateFromText(StringBuilder tasks) {
+        setTasks(tasks);
+    }
+
+    public void setTasks(StringBuilder tasksFileContent){
         String stringTasksFileContent = tasksFileContent.toString();
 
         String[] lines = stringTasksFileContent.split("\n");
@@ -21,8 +28,9 @@ public class Parser {
         }
 
         for (String textTask : lines) {
-            Task task = new Task();
             if (isValidTask(textTask)){
+                Task task = new Task();
+                task.setStatus(parseStatus(textTask));
                 task.setDoneDate(parseDoneDate(textTask));
                 task.setPriority(parsePriority(textTask));
                 task.setCreationDate(parseCreationDate(textTask));
@@ -31,44 +39,58 @@ public class Parser {
                 task.setDueDate(parseDueDate(textTask));
                 task.setAttachments(parseAttachments(textTask));
                 task.setDescription(parseDescription(textTask));
+                this.tasks.add(task);
             }
         }
-        return null;
+    }
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public String parseDoneDate(String task){
-        String regEx = "\s?done:\\d{4}-\\d{2}-\\d{2}";
+    private String parseStatus(String task){
+        String regEx = " done:\\d{4}-\\d{2}-\\d{2}| done:";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
         if (matcher.find()){
-            String date = matcher.group().substring(5);
+            return "done";
+        }
+        return "undone";
+    }
+    private String parseDoneDate(String task){
+        String regEx = " done:\\d{4}-\\d{2}-\\d{2}";
+        Pattern pattern = Pattern.compile(regEx);
+        Matcher matcher = pattern.matcher(task);
+        if (matcher.find()){
+            String date = matcher.group().trim().substring(5);
             if (isValidDate(date)){
                 return date;
             }
         }
         return "";
     }
-    public String parsePriority(String task){
-        String regEx = " ?\\([A-Z]\\)";
+    private String parsePriority(String task){
+        String regEx = " \\([A-Z]\\) ";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
         if (matcher.find()){
-            return matcher.group().substring(1,2);
+            return matcher.group().trim().substring(1,2);
         }
         return "";
     }
-    public String parseCreationDate(String task){
-        String regEx = "created:\\d{4}-\\d{2}-\\d{2}";
+    private String parseCreationDate(String task){
+        String regEx = " created:\\d{4}-\\d{2}-\\d{2}";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
-        String date = matcher.group().substring(8);
-        if (isValidDate(date)){
-            return date;
+        if (matcher.find()){
+            String date = matcher.group().trim().substring(8);
+            if (isValidDate(date)){
+                return date;
+            }
         }
         return "";
     }
-    public List<String> parseProjects(String task){
-        Pattern pattern = Pattern.compile("\\+(\\w+)");
+    private List<String> parseProjects(String task){
+        Pattern pattern = Pattern.compile(" \\+(\\w+)");
         Matcher matcher = pattern.matcher(task);
         List<String> projects = new ArrayList<>();
         while (matcher.find()){
@@ -76,8 +98,8 @@ public class Parser {
         }
         return projects;
     }
-    public List<String> parseTags(String task){
-        Pattern pattern = Pattern.compile("@(\\w+)");
+    private List<String> parseTags(String task){
+        Pattern pattern = Pattern.compile(" @(\\w+)");
         Matcher matcher = pattern.matcher(task);
         List<String> tags = new ArrayList<>();
         while (matcher.find()){
@@ -85,38 +107,43 @@ public class Parser {
         }
         return tags;
     }
-    public String parseDueDate(String task){
-        String regEx = "due:\\d{4}-\\d{2}-\\d{2}";
+    private String parseDueDate(String task){
+        String regEx = " due:\\d{4}-\\d{2}-\\d{2}";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
-        String date = matcher.group().substring(4);
-        if (isValidDate(date)){
-            return date;
+        if (matcher.find()){
+            String date = matcher.group().trim().substring(4);
+            if (isValidDate(date)){
+                return date;
+            }
         }
         return "";
     }
-    public List<String> parseAttachments(String task){
-        String regEx = "\\[(.*?)\\]";
+    private List<String> parseAttachments(String task){
+        String regEx = " \\[(.*?)\\]";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
         List<String> attachments = new ArrayList<>();
         while (matcher.find()){
             String match = matcher.group().trim();
+            match = match.substring(1, match.length() - 1).trim();
             attachments.add(match);
         }
         return attachments;
     }
-    public String parseDescription(String task){
-        String regEx = "\\{(.*?)\\}";
+    private String parseDescription(String task){
+        String regEx = " \\{(.*?)\\}";
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(task);
         if(matcher.find()){
-            return matcher.group();
+            String match = matcher.group().trim();
+            match = match.substring(1, match.length() - 1).trim();
+            return match;
         }
         return "";
     }
 
-    public boolean isValidDate(String dateString){
+    private boolean isValidDate(String dateString){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(false);
 
@@ -127,7 +154,7 @@ public class Parser {
             return false;
         }
     }
-    public boolean isValidTask(String task){
+    private boolean isValidTask(String task){
         return task.charAt(0) == '-' && task.charAt(1) == ' ';
     }
 }
