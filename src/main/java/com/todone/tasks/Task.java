@@ -3,6 +3,7 @@ package com.todone.tasks;
 import java.util.List;
 
 public class Task {
+    private String status;
     private String doneDate;
     private String priority;
     private String creationDate;
@@ -14,6 +15,9 @@ public class Task {
     private String description;
 
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public void setDoneDate(String doneDate) {
         this.doneDate = doneDate;
     }
@@ -41,7 +45,9 @@ public class Task {
     public void setAttachments(List<String> attachments) {
         this.attachments = attachments;
     }
-
+    public void setTitle(String title) {
+        this.title = title;
+    }
     public void setDescription(String description) {
         this.description = description;
     }
