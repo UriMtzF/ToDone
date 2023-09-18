@@ -11,12 +11,12 @@ public class RWFile {
 
             String line;
 
-            while ((line = bufferedReader.readLine()) != null){
+            while ((line = bufferedReader.readLine()) != null) {
                 content.append(line).append("\n");
             }
 
             bufferedReader.close();
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("El archivo no existe");
         } catch (IOException e) {
             System.out.println("Ocurrio un error al leer el archivo" + e.getMessage());

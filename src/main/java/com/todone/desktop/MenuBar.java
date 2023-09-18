@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 
 public class MenuBar extends JMenuBar implements ActionListener {
     JMenu mFile, mHelp;
-    JMenuItem miNew, miSave, miExit, miAbout,miDocs;
+    JMenuItem miNew, miSave, miExit, miAbout, miDocs;
+
     public MenuBar() {
         //TODO: Set multilanguage
         mFile = new JMenu("File");
@@ -41,7 +42,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if(actionEvent.getSource().equals(miExit)){
+        if (actionEvent.getSource().equals(miExit)) {
             System.exit(0);
         }
     }
