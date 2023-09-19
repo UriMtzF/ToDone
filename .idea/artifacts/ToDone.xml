@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jlink" name="ToDone">
+    <output-path>$PROJECT_DIR$/out/artifacts/ToDone</output-path>
+    <root id="root" />
+  </artifact>
+</component>

@@ -1,4 +1,4 @@
-package com.todone.desktop;
+package com.todone.desktop.helpers;
 
 import java.awt.*;
 import java.io.IOException;
